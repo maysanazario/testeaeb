@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102a2a">
+<title>LocadoraVeiculos — encontre seu próximo caminho!</title>
+
+<!-- ============ POSTHOG (substitua SUA_PROJECT_KEY) ============ -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags identify reset get_distinct_id opt_in_capturing opt_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('SUA_PROJECT_KEY', { api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only' });
+</script>
+
+<style>
+:root{
+  --bg:#102a2a; --bg2:#0b1f1f; --card:#163838; --line:#245050;
+  --ink:#f2f7f5; --muted:#9db8b3; --accent:#f5b94a; --accent-ink:#2a1c00; --ok:#5ed39b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* Nav */
+header{border-bottom:1px solid var(--line);background:var(--bg2)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.logo i{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-style:normal}
+.nav nav{display:flex;gap:22px;color:var(--muted);font-size:.95rem}
+.nav nav a:hover{color:var(--ink)}
+.btn{display:inline-block;border-radius:10px;padding:10px 16px;font-weight:700;font-size:.92rem;border:1px solid var(--line)}
+.btn-accent{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* Hero */
+.hero{padding:64px 0 48px}
+.eyebrow{letter-spacing:.14em;font-size:.75rem;color:var(--accent);font-weight:700}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;margin:12px 0}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero p{color:var(--muted);max-width:520px}
+.search{margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.search label{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.08em;margin-bottom:4px}
+.search select,.search input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);font:inherit}
+.search .btn{align-self:end;text-align:center}
+.social{margin-top:18px;color:var(--muted);font-size:.9rem}
+.social b{color:var(--ink)}
+
+/* Lista */
+section.lista{padding:40px 0 64px}
+.lista h2{font-size:1.9rem;margin:6px 0}
+.lista h2 em{color:var(--accent)}
+.lista .sub{color:var(--muted)}
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 8px}
+.filtros button{background:transparent;color:var(--muted);border:1px solid var(--line);padding:8px 14px;border-radius:999px;font:inherit;font-size:.88rem;cursor:pointer}
+.filtros button[aria-pressed="true"]{background:var(--ink);color:var(--bg2);border-color:var(--ink)}
+.count{color:var(--muted);font-size:.85rem;margin-bottom:16px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.car{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px;transition:transform .15s,border-color .15s}
+.car:hover{transform:translateY(-3px);border-color:var(--muted)}
+.tag{font-size:.68rem;letter-spacing:.12em;color:var(--accent);font-weight:700}
+.car h3{font-size:1.25rem}
+.meta{color:var(--muted);font-size:.88rem}
+.rate{color:var(--accent);font-weight:700;font-size:.9rem}
+.specs{display:flex;gap:14px;color:var(--muted);font-size:.85rem;margin:4px 0}
+.price{font-size:1.9rem;font-weight:800}
+.price small{font-size:.85rem;font-weight:400;color:var(--muted)}
+.avail{color:var(--ok);font-size:.82rem}
+.car .btn{margin-top:8px;text-align:center}
+
+/* ===== Elementos exclusivos da VARIANTE B (escondidos no controle) ===== */
+.only-b{display:none}
+body.variant-upgrade .only-b{display:block}
+body.variant-upgrade .car.destaque{
+  border:2px solid var(--accent);
+  background:linear-gradient(180deg,#1d4545,var(--card));
+  box-shadow:0 10px 30px rgba(245,185,74,.18);
+  grid-column:1 / -1;               /* ocupa a largura toda no desktop */
+}
+@media (min-width:760px){
+  body.variant-upgrade .car.destaque{flex-direction:row;align-items:center;gap:28px}
+  body.variant-upgrade .car.destaque .col-main{flex:1}
+  body.variant-upgrade .car.destaque .col-cta{min-width:230px;display:flex;flex-direction:column;gap:6px}
+}
+.badge-rec{position:absolute;top:-12px;left:18px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:.75rem;padding:5px 12px;border-radius:999px;letter-spacing:.04em}
+.delta{display:inline-block;background:rgba(94,211,155,.14);color:var(--ok);border:1px solid rgba(94,211,155,.4);padding:4px 10px;border-radius:8px;font-size:.85rem;font-weight:700;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chips span{background:var(--bg2);border:1px solid var(--line);color:var(--ink);font-size:.78rem;padding:4px 10px;border-radius:999px}
+.col-main,.col-cta{display:flex;flex-direction:column;gap:6px}
+
+/* Confiança */
+.trust{border-top:1px solid var(--line);background:var(--bg2);padding:32px 0}
+.trust .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.trust b{display:block}
+.trust span{color:var(--muted);font-size:.9rem}
+footer{padding:28px 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+@media (max-width:640px){.nav nav{display:none}}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html"><i>L</i>LocadoraVeiculos</a>
+    <nav><a href="#veiculos">Veículos</a><a href="#como-funciona">Como funciona</a><a href="#ajuda">Ajuda</a></nav>
+    <div style="display:flex;gap:8px">
+      <a class="btn" href="cadastro.html">Entrar</a>
+      <a class="btn btn-accent" href="cadastro.html">Criar conta ↗</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">LIBERDADE PARA IR MAIS LONGE</div>
+      <h1>Seu próximo caminho começa <em>aqui.</em></h1>
+      <p>Encontre o carro ideal para cada destino. Simples de reservar, fácil de aproveitar.</p>
+      <form class="search" onsubmit="event.preventDefault();document.getElementById('veiculos').scrollIntoView()">
+        <div><label>LOCAL DE RETIRADA</label>
+          <select><option>São Paulo, SP</option><option>Rio de Janeiro, RJ</option><option>Belo Horizonte, MG</option></select></div>
+        <div><label>RETIRADA</label><input type="date"></div>
+        <div><label>DEVOLUÇÃO</label><input type="date"></div>
+        <button class="btn btn-accent" type="submit">Buscar carros →</button>
+      </form>
+      <div class="social"><b>Mais de 2.400</b> pessoas viajaram com a gente</div>
+    </div>
+  </section>
+
+  <section class="lista" id="veiculos">
+    <div class="wrap">
+      <div class="eyebrow">ESCOLHA O SEU</div>
+      <h2>Encontre seu <em>carro ideal</em></h2>
+      <p class="sub">Opções para todos os planos, com conforto e tranquilidade.</p>
+
+      <div class="filtros" id="filtros">
+        <button data-f="todos" aria-pressed="true">Todos</button>
+        <button data-f="economico" aria-pressed="false">Econômicos</button>
+        <button data-f="suv" aria-pressed="false">SUVs</button>
+        <button data-f="premium" aria-pressed="false">Premium</button>
+      </div>
+      <div class="count" id="count"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+</main>
+
+<section class="trust" id="como-funciona">
+  <div class="wrap">
+    <div><b>✓ Sem surpresas</b><span>Preço claro do início ao fim</span></div>
+    <div><b>◷ Retirada sem espera</b><span>Seu carro pronto no horário</span></div>
+    <div id="ajuda"><b>♡ Suporte de verdade</b><span>Conte com a gente na estrada</span></div>
+  </div>
+</section>
+<footer><div class="wrap">© 2026 LocadoraVeiculos</div></footer>
+
+<script>
+/* =====================================================================
+   DADOS — adicione os demais veículos aqui (basta replicar o objeto).
+   altaMargem: true marca os produtos que o teste quer promover.
+   ===================================================================== */
+const CARROS = [
+  { id:'corolla', nome:'Toyota Corolla', tipo:'Sedan · Automático · Flex', cat:'economico',
+    tag:'MAIS ALUGADO', tagCat:'CITY', ordem:1, nota:'4,9', lugares:5, diaria:189, altaMargem:false },
+  { id:'compass', nome:'Jeep Compass', tipo:'SUV · Automático · Flex', cat:'suv',
+    tag:'AVENTURA', tagCat:'SUV', ordem:2, nota:'4,8', lugares:5, diaria:279, altaMargem:true,
+    beneficios:['Mais espaço','Mais segurança','Ideal para estrada'] },
+  { id:'city', nome:'Honda City', tipo:'Hatch · Automático · Flex', cat:'economico',
+    tag:'CONFORTO EXTRA', tagCat:'PLUS', ordem:3, nota:'4,9', lugares:5, diaria:159, altaMargem:false },
+];
+const BASE_ECONOMICO = 'corolla';   // referência da âncora de preço (+R$ X/dia vs. ...)
+const FLAG = 'exp-funil-alta-margem';   // control | lista (B) | funil (C = lista + upgrade no checkout)
+const CHECKOUT = 'checkout-variante-c.html';
+
+/* =====================================================================
+   DETERMINAÇÃO DA VARIANTE
+   - PostHog Feature Flag (fonte oficial do experimento)
+   - ?variant=test|control força a variante (útil para QA)
+   - Se o PostHog não responder em 1,5 s, cai no controle (sem flicker longo)
+   ===================================================================== */
+let variante = 'control', renderizado = false;
+const forced = new URLSearchParams(location.search).get('variant');
+const QA = forced ? '&variant=' + encodeURIComponent(forced==='test'?'lista':forced) : '';  // leva o braço forçado ao checkout
+
+function aplicar(v){
+  if(renderizado) return;            // onFeatureFlags pode disparar mais de uma vez
+  variante = v;                      // 'control' | 'lista' | 'funil'
+  document.body.classList.toggle('variant-upgrade', v!=='control');
+  renderizado = true;
+  render();
+  try{ posthog.register({ experimento_variante: v }); }catch(e){}
+}
+
+if(['control','lista','funil','test'].includes(forced)){
+  aplicar(forced==='test' ? 'lista' : forced);   // 'test' = alias antigo de 'lista'
+}else{
+  const timeout = setTimeout(()=>aplicar('control'),1500);
+  try{
+    posthog.onFeatureFlags(()=>{
+      clearTimeout(timeout);
+      // getFeatureFlag dispara automaticamente o evento $feature_flag_called (exposição)
+      const v = posthog.getFeatureFlag(FLAG);
+      aplicar(['lista','funil'].includes(v) ? v : 'control');
+    });
+  }catch(e){ clearTimeout(timeout); aplicar('control'); }
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+let filtro = 'todos';
+const $grid = document.getElementById('grid');
+const $count = document.getElementById('count');
+const fmt = n => 'R$ ' + n.toLocaleString('pt-BR');
+
+function ordenar(lista){
+  const l = [...lista].sort((a,b)=>a.ordem-b.ordem);
+  if(variante!=='control'){        // VARIANTES B/C: alta margem sobe para o topo
+    l.sort((a,b)=> (b.altaMargem - a.altaMargem) || (a.ordem-b.ordem));
+  }
+  return l;
+}
+
+function cardHTML(c, destaque){
+  const base = CARROS.find(x=>x.id===BASE_ECONOMICO);
+  const diff = base ? c.diaria - base.diaria : 0;
+  const tag  = destaque ? 'ESCOLHA INTELIGENTE' : c.tag;
+
+  const bloco = destaque ? `
+    <span class="badge-rec">★ Recomendado</span>
+    <div class="col-main">
+      <div class="tag">${tag}${c.tagCat?'<span style="color:var(--muted)"> · '+c.tagCat+'</span>':''}</div>
+      <h3>${c.nome}</h3>
+      <div class="meta">${c.tipo}</div>
+      <div class="rate">★ ${c.nota}</div>
+      <div class="chips only-b">${(c.beneficios||[]).map(b=>`<span>✓ ${b}</span>`).join('')}</div>
+      <div class="specs"><span>◉ ${c.lugares} lugares</span><span>▣ Ar-condicionado</span></div>
+    </div>
+    <div class="col-cta">
+      <div class="price">${fmt(c.diaria)}<small> / diária</small></div>
+      ${diff>0?`<span class="delta only-b">Apenas +${fmt(diff)}/dia vs. ${base.nome.split(' ')[1]}</span>`:''}
+      <div class="avail">Disponível para reserva</div>
+      <a class="btn btn-accent btn-reservar" href="${CHECKOUT}?veiculo=${c.id}${QA}">Reservar →</a>
+    </div>` : `
+    <div class="tag">${tag}<span style="color:var(--muted)"> · ${c.tagCat}</span></div>
+    <h3>${c.nome}</h3>
+    <div class="meta">${c.tipo}</div>
+    <div class="rate">★ ${c.nota}</div>
+    <div class="specs"><span>◉ ${c.lugares} lugares</span><span>▣ Ar-condicionado</span></div>
+    <div class="price">${fmt(c.diaria)}<small> / diária</small></div>
+    <div class="avail">Disponível para reserva</div>
+    <a class="btn btn-accent btn-reservar" href="${CHECKOUT}?veiculo=${c.id}${QA}">Reservar →</a>`;
+
+  return `<article class="car ${destaque?'destaque':''}" data-id="${c.id}">${bloco}</article>`;
+}
+
+function render(){
+  const visiveis = CARROS.filter(c => filtro==='todos' || c.cat===filtro);
+  const lista = ordenar(visiveis);
+  // só um card recebe o destaque: o primeiro de alta margem, e apenas na variante B
+  const idDestaque = variante!=='control' ? (lista.find(c=>c.altaMargem)||{}).id : null;
+
+  $grid.innerHTML = lista.map(c => cardHTML(c, c.id===idDestaque)).join('');
+  $count.textContent = `${lista.length} veículo${lista.length!==1?'s':''} disponíve${lista.length!==1?'is':'l'}`;
+
+  // atributos de rastreamento
+  $grid.querySelectorAll('.car').forEach(el=>{
+    const c = CARROS.find(x=>x.id===el.dataset.id);
+    const btn = el.querySelector('.btn-reservar');
+    btn.addEventListener('click', ()=>{
+      try{
+        posthog.capture('reservar_clicado', {
+          veiculo:c.id, categoria:c.cat, alta_margem:c.altaMargem,
+          diaria:c.diaria, posicao:[...$grid.children].indexOf(el)+1,
+          destaque: el.classList.contains('destaque'),
+          variante
+        });
+      }catch(e){}
+    });
+  });
+}
+
+/* Filtros */
+document.getElementById('filtros').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  filtro = b.dataset.f;
+  document.querySelectorAll('#filtros button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+  render();
+  try{ posthog.capture('filtro_categoria', { filtro, variante }); }catch(e){}
+});
+
+/* Exposição real: evento quando a lista entra na viewport (denominador da métrica primária) */
+let visto = false;
+new IntersectionObserver((entries,obs)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting && !visto && renderizado){
+      visto = true;
+      try{ posthog.capture('lista_veiculos_visualizada', { variante }); }catch(e){}
+      obs.disconnect();
+    }
+  });
+},{threshold:.35}).observe(document.getElementById('veiculos'));
+</script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102a2a">
+<title>Checkout da locação — LocadoraVeiculos</title>
+
+<!-- ============ POSTHOG (substitua SUA_PROJECT_KEY) ============ -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags on onFeatureFlags identify reset get_distinct_id opt_in_capturing opt_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('SUA_PROJECT_KEY', { api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only' });
+</script>
+
+<style>
+:root{
+  --bg:#102a2a; --bg2:#0b1f1f; --card:#163838; --line:#245050;
+  --ink:#f2f7f5; --muted:#9db8b3; --accent:#f5b94a; --accent-ink:#2a1c00; --ok:#5ed39b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);background:var(--bg2)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.logo i{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-style:normal}
+.secure{color:var(--ok);font-size:.88rem}
+.btn{display:inline-block;border-radius:10px;padding:12px 18px;font-weight:700;font-size:.95rem;border:1px solid var(--line);cursor:pointer;font-family:inherit;background:transparent;color:var(--ink)}
+.btn-accent{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.back{display:inline-block;margin:22px 0 6px;color:var(--muted);font-size:.9rem}
+.eyebrow{letter-spacing:.14em;font-size:.75rem;color:var(--accent);font-weight:700}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin:6px 0 4px}
+h1 em{color:var(--accent)}
+.steps{display:flex;gap:18px;color:var(--muted);font-size:.85rem;margin:8px 0 24px}
+.steps b{color:var(--ink)}
+
+.layout{display:grid;grid-template-columns:1fr 380px;gap:24px;padding-bottom:56px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px}
+.panel h2{font-size:1.15rem;display:flex;align-items:center;gap:10px}
+.panel h2 .n{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:.8rem}
+.panel .sub{color:var(--muted);font-size:.9rem;margin:4px 0 14px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.head a{color:var(--accent);font-size:.88rem}
+.dados{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dados label,.field label{display:block;font-size:.68rem;letter-spacing:.1em;color:var(--muted)}
+.dados b{display:block;font-weight:600}
+
+/* Pagamento */
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.pay label{border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;background:var(--bg2)}
+.pay input{position:absolute;opacity:0}
+.pay label:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pay small{color:var(--muted)}
+.pay .off{color:var(--ok);font-weight:700;font-size:.8rem}
+.cardform{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field.full{grid-column:1/-1}
+.field input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);font:inherit;margin-top:4px}
+.pixbox{display:none;background:var(--bg2);border:1px dashed var(--line);border-radius:10px;padding:14px;color:var(--muted);font-size:.9rem}
+.termos{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);margin:16px 0}
+.termos a{color:var(--accent)}
+.safe{font-size:.82rem;color:var(--muted);margin-top:10px}
+#ok{display:none;background:rgba(94,211,155,.12);border:1px solid var(--ok);color:var(--ok);padding:14px;border-radius:12px;margin-top:14px}
+
+/* Resumo */
+.resumo{position:sticky;top:16px}
+.resumo .st{color:var(--ok);font-size:.8rem}
+.tag{font-size:.68rem;letter-spacing:.12em;color:var(--accent);font-weight:700}
+.resumo h3{font-size:1.2rem;margin-top:2px}
+.meta{color:var(--muted);font-size:.88rem}
+.rate{color:var(--accent);font-weight:700;font-size:.9rem}
+.when{display:grid;gap:10px;margin:14px 0;border-top:1px solid var(--line);padding-top:12px}
+.when small{display:block;font-size:.68rem;letter-spacing:.1em;color:var(--muted)}
+.when span{color:var(--muted);font-size:.85rem}
+.row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:.95rem}
+.row.neg b{color:var(--ok)}
+.row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;font-size:1.15rem}
+.row.total b{font-size:1.4rem}
+.help{display:flex;gap:12px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+.help a{color:var(--accent)}
+
+/* ===== UPGRADE (exclusivo da variante C) ===== */
+#upgrade{display:none;position:relative;border:2px solid var(--accent);background:linear-gradient(180deg,#1d4545,var(--card));border-radius:16px;padding:22px;margin-bottom:18px}
+body.com-upgrade #upgrade{display:block}
+#upgrade .badge{position:absolute;top:-12px;left:18px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:.75rem;padding:5px 12px;border-radius:999px}
+#upgrade h2{font-size:1.15rem;margin-top:4px}
+#upgrade .sub{color:var(--muted);font-size:.9rem;margin:4px 0 12px}
+.up-body{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chips span{background:var(--bg2);border:1px solid var(--line);font-size:.78rem;padding:4px 10px;border-radius:999px}
+.up-price{text-align:right}
+.up-price .big{font-size:1.5rem;font-weight:800;color:var(--accent)}
+.up-price small{display:block;color:var(--muted)}
+.delta{display:inline-block;background:rgba(94,211,155,.14);color:var(--ok);border:1px solid rgba(94,211,155,.4);padding:3px 10px;border-radius:8px;font-size:.82rem;font-weight:700}
+#upgrade.on{border-color:var(--ok)}
+#upgrade.on .btn-accent{background:transparent;color:var(--ink);border-color:var(--line)}
+footer{padding:26px 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html"><i>L</i>LocadoraVeiculos</a>
+    <span class="secure">♢ Pagamento seguro</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <a class="back" href="index.html" id="voltar">← Voltar aos veículos</a>
+  <div class="eyebrow">QUASE NA ESTRADA</div>
+  <h1>Finalize sua <em>reserva.</em></h1>
+  <div class="steps"><span><b>01</b> Seus dados</span><span>02 Pagamento</span></div>
+
+  <div class="layout">
+    <div>
+      <!-- Dados -->
+      <section class="panel">
+        <div class="head">
+          <div><h2><span class="n">1</span>Dados de quem vai dirigir</h2>
+          <p class="sub">Confira seus dados antes de seguir.</p></div>
+          <a href="cadastro.html">Editar dados</a>
+        </div>
+        <div class="dados">
+          <div><label>NOME COMPLETO</label><b>Mariana Silva</b></div>
+          <div><label>CPF</label><b>•••.456.789-••</b></div>
+          <div><label>E-MAIL</label><b>mariana@email.com</b></div>
+          <div><label>CELULAR</label><b>(11) 99999-1234</b></div>
+        </div>
+      </section>
+
+      <!-- UPGRADE: só aparece na variante C e só se o carro escolhido não for de alta margem -->
+      <section id="upgrade" aria-live="polite">
+        <span class="badge">★ Oferta para a sua viagem</span>
+        <h2 id="up-titulo"></h2>
+        <p class="sub" id="up-sub"></p>
+        <div class="up-body">
+          <div>
+            <div class="chips" id="up-chips"></div>
+            <span class="delta" id="up-delta"></span>
+          </div>
+          <div class="up-price">
+            <div class="big" id="up-total"></div>
+            <small id="up-diaria"></small>
+            <button type="button" class="btn btn-accent" id="up-btn" style="margin-top:8px">Fazer upgrade</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pagamento -->
+      <form class="panel" id="form">
+        <h2><span class="n">2</span>Forma de pagamento</h2>
+        <p class="sub">Escolha como deseja pagar sua locação.</p>
+        <div class="pay">
+          <label><input type="radio" name="pg" value="cartao" checked>
+            <b>▤ Cartão de crédito</b><small>Parcele em até 3x sem juros</small></label>
+          <label><input type="radio" name="pg" value="pix">
+            <b>◆ PIX</b><small>5% de desconto no total</small><span class="off">−5%</span></label>
+        </div>
+        <div class="cardform" id="cartao">
+          <div class="field"><label>Nome impresso no cartão</label><input autocomplete="cc-name" placeholder="MARIANA SILVA"></div>
+          <div class="field"><label>Número do cartão</label><input inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000"></div>
+          <div class="field"><label>Validade</label><input autocomplete="cc-exp" placeholder="MM/AA"></div>
+          <div class="field"><label>CVV</label><input inputmode="numeric" autocomplete="cc-csc" placeholder="123"></div>
+        </div>
+        <div class="pixbox" id="pixbox">O QR Code e o código PIX serão exibidos após a confirmação.</div>
+        <label class="termos"><input type="checkbox" required> <span>Concordo com as <a href="#condicoes">condições da locação</a> e políticas de cancelamento.</span></label>
+        <button class="btn btn-accent" type="submit" style="width:100%">Confirmar e reservar →</button>
+        <p class="safe">♢ Seus dados são criptografados e protegidos.</p>
+        <div id="ok"></div>
+      </form>
+    </div>
+
+    <!-- Resumo -->
+    <aside class="panel resumo">
+      <h2 style="margin-bottom:10px">Resumo da reserva</h2>
+      <div class="st">● Disponível</div>
+      <div class="tag" id="r-tag"></div>
+      <h3 id="r-nome"></h3>
+      <div class="meta" id="r-tipo"></div>
+      <div class="rate" id="r-nota"></div>
+      <div class="when">
+        <div><small>RETIRADA</small><b>20 nov, 2026 · 10:00</b><span>São Paulo, Congonhas</span></div>
+        <div><small>DEVOLUÇÃO</small><b>24 nov, 2026 · 10:00</b><span>São Paulo, Congonhas</span></div>
+      </div>
+      <div class="row"><span id="r-diarias"></span><b id="r-sub"></b></div>
+      <div class="row"><span>Proteção essencial</span><b id="r-prot"></b></div>
+      <div class="row neg"><span>Desconto de boas-vindas</span><b id="r-desc"></b></div>
+      <div class="row neg" id="r-pixrow" style="display:none"><span>Desconto PIX (5%)</span><b id="r-pix"></b></div>
+      <div class="row total"><span>Total da locação</span><b id="r-total"></b></div>
+      <p class="safe">Pagamento processado com segurança. A caução será informada na retirada.</p>
+      <div class="help"><span style="font-size:1.4rem">☏</span><div><b style="color:var(--ink)">Precisa de ajuda?</b><br>Nosso time está aqui para você. <a href="index.html#ajuda">Fale com a gente →</a></div></div>
+    </aside>
+  </div>
+</main>
+<footer class="wrap"><span>© 2026 LocadoraVeiculos</span><span>Privacidade · Termos de uso</span></footer>
+
+<script>
+/* ===== Dados (mantenha em sincronia com a lista da página inicial) ===== */
+const CARROS = {
+  corolla:{ id:'corolla', nome:'Toyota Corolla', tipo:'Sedan · Automático · Flex', cat:'economico', tagCat:'CITY', nota:'4,9', diaria:189, altaMargem:false },
+  compass:{ id:'compass', nome:'Jeep Compass',  tipo:'SUV · Automático · Flex',  cat:'suv',       tagCat:'SUV',  nota:'4,8', diaria:279, altaMargem:true,
+            beneficios:['Mais espaço','Mais segurança','Ideal para estrada'] },
+  city:   { id:'city',    nome:'Honda City',    tipo:'Hatch · Automático · Flex', cat:'economico', tagCat:'PLUS', nota:'4,9', diaria:159, altaMargem:false },
+};
+const DIARIAS = 4, PROTECAO = 72, BOAS_VINDAS = 30, PIX = 0.05;
+const FLAG = 'exp-funil-alta-margem';          // control | lista | funil
+const params = new URLSearchParams(location.search);
+const original = CARROS[params.get('veiculo')] || CARROS.corolla;
+const alvo = Object.values(CARROS).find(c => c.altaMargem && c.diaria > original.diaria); // alvo do upgrade (se existir)
+
+let braco = 'control', upgradeAtivo = false, ofertaVista = false;
+const $ = id => document.getElementById(id);
+const brl = n => 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const cap = (n,p)=>{ try{ posthog.capture(n,{ braco, veiculo_original:original.id, ...p }); }catch(e){} };
+
+/* ===== Cálculo e renderização do resumo ===== */
+function estado(){
+  const c = (upgradeAtivo && alvo) ? alvo : original;
+  const pix = document.querySelector('input[name=pg]:checked').value === 'pix';
+  const sub = c.diaria * DIARIAS;
+  const base = sub + PROTECAO - BOAS_VINDAS;
+  const descPix = pix ? +(base * PIX).toFixed(2) : 0;
+  return { c, pix, sub, descPix, total: base - descPix };
+}
+function renderResumo(){
+  const { c, pix, sub, descPix, total } = estado();
+  $('r-tag').textContent = c.tagCat + ' · 01';
+  $('r-nome').textContent = c.nome;
+  $('r-tipo').textContent = c.tipo;
+  $('r-nota').textContent = '★ ' + c.nota;
+  $('r-diarias').textContent = `${DIARIAS} diárias × R$ ${c.diaria}`;
+  $('r-sub').textContent = brl(sub);
+  $('r-prot').textContent = brl(PROTECAO);
+  $('r-desc').textContent = '− ' + brl(BOAS_VINDAS);
+  $('r-pixrow').style.display = pix ? 'flex' : 'none';
+  $('r-pix').textContent = '− ' + brl(descPix);
+  $('r-total').textContent = brl(total);
+}
+
+/* ===== Oferta de upgrade (variante C) ===== */
+function montarOferta(){
+  const dif = alvo.diaria - original.diaria, difTotal = dif * DIARIAS;
+  $('up-titulo').textContent = `Faça upgrade para o ${alvo.nome}`;
+  $('up-sub').textContent = `Em vez do ${original.nome}, viaje com mais espaço e conforto. Sem taxas escondidas.`;
+  $('up-chips').innerHTML = alvo.beneficios.map(b=>`<span>✓ ${b}</span>`).join('');
+  $('up-delta').textContent = `Apenas +R$ ${dif}/dia`;
+  $('up-total').textContent = `+ ${brl(difTotal)}`;
+  $('up-diaria').textContent = `no total de ${DIARIAS} diárias`;
+  document.body.classList.add('com-upgrade');
+  new IntersectionObserver((es,o)=>{ es.forEach(e=>{ if(e.isIntersecting && !ofertaVista){
+    ofertaVista = true; cap('upgrade_checkout_exibido',{ veiculo_oferta:alvo.id, diferenca_total:difTotal }); o.disconnect(); }});
+  },{threshold:.5}).observe($('upgrade'));
+}
+$('up-btn').addEventListener('click',()=>{
+  upgradeAtivo = !upgradeAtivo;                       // nunca pré-selecionado; o usuário pode desfazer
+  $('upgrade').classList.toggle('on', upgradeAtivo);
+  $('up-btn').textContent = upgradeAtivo ? 'Remover upgrade' : 'Fazer upgrade';
+  cap(upgradeAtivo ? 'upgrade_checkout_aceito' : 'upgrade_checkout_removido',{ veiculo_oferta:alvo.id });
+  renderResumo();
+});
+
+/* ===== Pagamento / envio ===== */
+document.querySelectorAll('input[name=pg]').forEach(r=>r.addEventListener('change',()=>{
+  const pix = r.value==='pix' && r.checked;
+  $('cartao').style.display = pix ? 'none' : 'grid';
+  $('pixbox').style.display = pix ? 'block' : 'none';
+  cap('forma_pagamento_selecionada',{ forma: document.querySelector('input[name=pg]:checked').value });
+  renderResumo();
+}));
+$('form').addEventListener('submit', e=>{
+  e.preventDefault();
+  const { c, total, pix } = estado();
+  cap('reserva_concluida',{ veiculo_final:c.id, categoria_final:c.cat, alta_margem:c.altaMargem,
+    upgrade: upgradeAtivo, valor: total, diaria: c.diaria, forma: pix?'pix':'cartao' });
+  $('ok').style.display = 'block';
+  $('ok').textContent = `Reserva confirmada: ${c.nome} · ${brl(total)}. (Demonstração — nenhum pagamento foi processado.)`;
+});
+
+/* ===== Variante: flag do PostHog (mesma do funil) + QA por URL ===== */
+let aplicado = false;
+function aplicar(v){
+  if(aplicado) return;          // onFeatureFlags pode disparar mais de uma vez
+  aplicado = true;
+  braco = v;
+  try{ posthog.register({ experimento_variante: v }); }catch(e){}
+  if(v==='funil' && alvo) montarOferta();
+  renderResumo();
+  cap('checkout_iniciado',{ diaria:original.diaria, oferta_disponivel: v==='funil' && !!alvo });
+}
+const forced = params.get('variant');
+// mantém o braço forçado (QA) ao voltar para a lista
+if(forced) $('voltar').href = 'index.html?variant=' + encodeURIComponent(forced);
+
+if(['control','lista','funil'].includes(forced)){ aplicar(forced); }
+else{
+  const t = setTimeout(()=>aplicar('control'),1500);
+  try{
+    posthog.onFeatureFlags(()=>{
+      clearTimeout(t);
+      const v = posthog.getFeatureFlag(FLAG);
+      aplicar(['lista','funil'].includes(v) ? v : 'control');
+    });
+  }catch(e){ clearTimeout(t); aplicar('control'); }
+}
+</script>
+</body>
+</html>
